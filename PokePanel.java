@@ -12,35 +12,64 @@ import java.util.Random;
 public class PokePanel extends JPanel {
    
    /** the number of all available pokemon. */
-   private static final int AVAILABLE_POKEMON = 13;
+   public static final int AVAILABLE_POKEMON = 13;
    /** show appeared pokemon info. */
-   private TextArea wildPokemon = new TextArea("");
+   public TextArea wildPokemon = new TextArea("");
+   /** show appeared pokemon info. */
+   public TextArea pokedex = new TextArea("");
    /** temp pokemon. */
-   private Pokemon tp = null;
+   public Pokemon tp = null;
    /** text for appeared pokemon. */
-   private String textarea = "";
+   public String textarea = "";
    /** hunt botton. */
-   private JButton b1 = new JButton(" Hunt ");
+   public JButton b1 = new JButton(" Hunt ");
    /** catch botton. */
-   private JButton b2 = new JButton(" Catch ");
+   public JButton b2 = new JButton(" Catch ");
+   /** Pokedex botton. */
+   public JButton b3 = new JButton(" Pokedex ");
+   /** BackPack botton. */
+   public JButton b4 = new JButton(" Backpack ");   
    /** Random number generator. */
-   private Random rGen = new Random();
-   /** a marker to determine if user has tried caught. */
-   private boolean tried = false;
+   public Random rGen = new Random();
+
+   
 
    /**
    * PokePanel.
    */
    public PokePanel() {
+     
+      BorderLayout bl = new BorderLayout();
+      setLayout(bl);      
+      add(new PokePanel1(), "North");      
+      add(new PokePanel2(), "South");
+  
+   }
    
-      setPreferredSize(new Dimension(500, 500));
-      add(new JLabel("To Catch A Pokemon: "));
-      add(wildPokemon);
-      b1.addActionListener(new PokeListener());
-      b2.addActionListener(new PokeListener());
-      add(b1);
-      add(b2);
+   public class PokePanel1 extends JPanel{
+      public PokePanel1() {
+      
+         setPreferredSize(new Dimension(500, 500));
+         add(new JLabel(" Catch A Pokemon: "));
+         add(wildPokemon);
+         b1.addActionListener(new PokeListener());
+         b2.addActionListener(new PokeListener());
+         b2.setEnabled(false);
+         add(b1);
+         add(b2);  
+      }
+   }
    
+   public class PokePanel2 extends JPanel{
+   
+      public PokePanel2() {
+      
+         setPreferredSize(new Dimension(500, 500));
+      
+         add(b3);
+         add(b4);
+         add(pokedex);
+      }
       
    }
    
@@ -49,13 +78,13 @@ public class PokePanel extends JPanel {
    * triggered by botton "Hunt"
    */
    public void hunt() {
-      tried = false;
       wildPokemon.setText("");
       textarea = "";
       tp = choosePokemonToAppear();    
       textarea += "A wild Pokemon appeared!\n\n";
       textarea += tp.toString() + "\n\n";
       wildPokemon.setText(textarea);
+      b2.setEnabled(true);
    
    }
    
@@ -68,16 +97,18 @@ public class PokePanel extends JPanel {
            
       
       double result = rGen.nextDouble();
-      if (!tried) {
-         textarea += "Attempt to catch the Pokemon.\n";
-         if (result > 0.5) {
-            textarea += "Caught " + tp.getName() + "!\n";
-         } else {
-            textarea += tp.getName() + " escaped!\n";
-         }
-      } 
-      tried = true;
+   
+      textarea += "Attempt to catch the Pokemon.\n";
+      if (result > 0.5) {
+         textarea += "Caught " + tp.getName() + "!\n";
+      } else {
+         textarea += tp.getName() + " escaped!\n";
+      }
+       
+      b2.setEnabled(false);
+   
       wildPokemon.setText(textarea);
+      pokedex.setText("OK");
    
    
    }
@@ -153,7 +184,7 @@ public class PokePanel extends JPanel {
    }
    
    /** GUIListenner. */
-   private class PokeListener implements ActionListener {
+   public class PokeListener implements ActionListener {
       
       /** GUIListenner. */
       public void actionPerformed(ActionEvent event) {
