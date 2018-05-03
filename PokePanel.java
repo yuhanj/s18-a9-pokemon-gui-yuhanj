@@ -21,6 +21,8 @@ public class PokePanel extends JPanel {
    public Pokemon tp = null;
    /** text for appeared pokemon. */
    public String textarea = "";
+   /** text for pokedex part. */
+   public String pokedexArea = "";
    /** hunt botton. */
    public JButton b1 = new JButton(" Hunt ");
    /** catch botton. */
@@ -31,6 +33,10 @@ public class PokePanel extends JPanel {
    public JButton b4 = new JButton(" Backpack ");   
    /** Random number generator. */
    public Random rGen = new Random();
+   /** binary search tree */
+   private PokeTree poketree = new PokeTree();
+   private JPanel top = new JPanel();
+   private JPanel bot = new JPanel();
 
    
 
@@ -39,39 +45,41 @@ public class PokePanel extends JPanel {
    */
    public PokePanel() {
      
-      BorderLayout bl = new BorderLayout();
-      setLayout(bl);      
-      add(new PokePanel1(), "North");      
-      add(new PokePanel2(), "South");
-  
+      setPreferredSize(new Dimension(600, 800));
+      addTopPanel();      
+      addBottomPanel();
+   
    }
    
-   public class PokePanel1 extends JPanel{
-      public PokePanel1() {
+   
+   private void addTopPanel() {
       
-         setPreferredSize(new Dimension(500, 500));
-         add(new JLabel(" Catch A Pokemon: "));
-         add(wildPokemon);
-         b1.addActionListener(new PokeListener());
-         b2.addActionListener(new PokeListener());
-         b2.setEnabled(false);
-         add(b1);
-         add(b2);  
-      }
+      top.setPreferredSize(new Dimension(500, 400));
+      top.add(new JLabel(" Catch A Pokemon: "));
+      top.add(wildPokemon);
+      b1.addActionListener(new PokeListener());
+      b2.addActionListener(new PokeListener());
+      b2.setEnabled(false);
+      top.add(b1);
+      top.add(b2);
+      add(top);  
+      
    }
    
-   public class PokePanel2 extends JPanel{
    
-      public PokePanel2() {
+   
+   
+   private void addBottomPanel() {
       
-         setPreferredSize(new Dimension(500, 500));
-      
-         add(b3);
-         add(b4);
-         add(pokedex);
-      }
-      
+      bot.setPreferredSize(new Dimension(500, 400));
+      b3.addActionListener(new PokeListener());
+      bot.add(b3);
+      bot.add(b4);
+      bot.add(pokedex);
+      add(bot);  
    }
+      
+   
    
    /**
    * show a wild pokemon in the textarea.
@@ -108,9 +116,17 @@ public class PokePanel extends JPanel {
       b2.setEnabled(false);
    
       wildPokemon.setText(textarea);
-      pokedex.setText("OK");
+      poketree.add(tp);
    
    
+   }
+   
+   public void showPokedex() {
+      
+      
+      pokedexArea = poketree.toString();
+      pokedex.setText(pokedexArea);
+      
    }
    /** 
    * Randomly generate a pokemon to appear. 
@@ -194,6 +210,9 @@ public class PokePanel extends JPanel {
          }
          if (event.getSource() == b2) {
             catchpoke();         
+         }
+         if (event.getSource() == b3) {
+            showPokedex();
          }
       
       } 

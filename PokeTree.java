@@ -19,8 +19,9 @@ public class PokeTree {
    * @param poke the added pokemon.
    */
    public void add(Pokemon poke) {
+      
       root = add(root, poke);
-      System.out.println("\nA "+ poke.getSpecies() +" has been added!\n");
+      
    }
    
    
@@ -200,6 +201,31 @@ public class PokeTree {
                + "\nCaught: " + node.getNumCaught() + "\n\n"); 
          inorderPokeTree(node.getRChild());
       }
+   }
+   
+   /**
+   * wrapper print method that calls private inorderPokeTree method.
+   */
+   public String toString() {
+      return toString(root);
+   }
+   
+   /**
+   * recursive method that prints the PokeTree in order. 
+   * @param node the root of tree/subtree
+   */
+   private String toString(PokeNode node) {
+      
+      String s = "";
+      
+      if (node != null) { 
+            
+         s += toString(node.getLChild());
+         s += node.getPokemon().toString() 
+               + "\nCaught: " + node.getNumCaught() + "\n\n"; 
+         s += toString(node.getRChild());
+      }
+      return s;
    }
    
    /** 
