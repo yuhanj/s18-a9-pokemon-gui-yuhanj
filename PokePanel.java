@@ -48,6 +48,8 @@ public class PokePanel extends JPanel {
    
    private Deque<Pokemon> tempstack = new ArrayDeque<>();
    
+   public JPopupMenu popup;
+   
 
    /**
    * PokePanel.
@@ -88,7 +90,14 @@ public class PokePanel extends JPanel {
       bot.add(pokedex);
       add(bot);  
    }
+   
+   private void addPopUpMenu() {
       
+      popup.add(item = new JMenuItem("PQ"));
+      item.setHorizontalTextPosition(JMenuItem.RIGHT);
+      item.addActionListener(menuListener);
+   
+   }   
    
    
    /**
