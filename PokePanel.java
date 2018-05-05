@@ -1,7 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.Random;
+import java.util.*;
 
 /**
 * Panel for PokeFrame GUI.
@@ -12,32 +12,41 @@ import java.util.Random;
 public class PokePanel extends JPanel {
    
    /** the number of all available pokemon. */
-   public static final int AVAILABLE_POKEMON = 13;
+   private static final int AVAILABLE_POKEMON = 13;
    /** show appeared pokemon info. */
-   public TextArea wildPokemon = new TextArea("");
+   private TextArea wildPokemon = new TextArea("");
    /** show appeared pokemon info. */
-   public TextArea pokedex = new TextArea("");
+   private TextArea pokedex = new TextArea("");
    /** temp pokemon. */
-   public Pokemon tp = null;
+   private Pokemon tp = null;
    /** text for appeared pokemon. */
-   public String textarea = "";
+   private String textarea = "";
    /** text for pokedex part. */
-   public String pokedexArea = "";
+   private String pokedexArea = "";
    /** hunt botton. */
-   public JButton b1 = new JButton(" Hunt ");
+   private JButton b1 = new JButton(" Hunt ");
    /** catch botton. */
-   public JButton b2 = new JButton(" Catch ");
+   private JButton b2 = new JButton(" Catch ");
    /** Pokedex botton. */
-   public JButton b3 = new JButton(" Pokedex ");
+   private JButton b3 = new JButton(" Pokedex ");
    /** BackPack botton. */
-   public JButton b4 = new JButton(" Backpack ");   
+   private JButton b4 = new JButton(" Backpack ");   
    /** Random number generator. */
-   public Random rGen = new Random();
+   private Random rGen = new Random();
    /** binary search tree */
    private PokeTree poketree = new PokeTree();
+   /** top panel.*/
    private JPanel top = new JPanel();
+   /** bottom panel. */
    private JPanel bot = new JPanel();
-
+   
+   private PriorityQueue<Pokemon> pokepq = new PriorityQueue<>();
+   
+   private PriorityQueue<Pokemon> temppq = new PriorityQueue<>();
+   
+   private Deque<Pokemon> pokestack = new ArrayDeque<>();
+   
+   private Deque<Pokemon> tempstack = new ArrayDeque<>();
    
 
    /**
@@ -73,6 +82,7 @@ public class PokePanel extends JPanel {
       
       bot.setPreferredSize(new Dimension(500, 400));
       b3.addActionListener(new PokeListener());
+      b4.addActionListener(new PokeListener());
       bot.add(b3);
       bot.add(b4);
       bot.add(pokedex);
@@ -107,7 +117,7 @@ public class PokePanel extends JPanel {
       double result = rGen.nextDouble();
    
       textarea += "Attempt to catch the Pokemon.\n";
-      if (result > 0.5) {
+      if (result > 0.5) { //chance of catching is 50%
          textarea += "Caught " + tp.getName() + "!\n";
       } else {
          textarea += tp.getName() + " escaped!\n";
@@ -117,16 +127,58 @@ public class PokePanel extends JPanel {
    
       wildPokemon.setText(textarea);
       poketree.add(tp);
+      pokepq.add(tp);
    
    
    }
    
-   public void showPokedex() {
+   private void showPokedex() {
       
       
       pokedexArea = poketree.toString();
       pokedex.setText(pokedexArea);
       
+   }
+   
+   private void showPokepq() {
+      String s = "";
+           
+      while (pokepq.size() > 0) {
+         Pokemon curr = pokepq.poll();
+         s += curr.toString() + "\n\n";
+         temppq.add(curr);       
+      }
+      
+      while (temppq.size() > 0) {
+         Pokemon curr = temppq.poll();
+         s += curr.toString() + "\n\n";  
+         pokepq.add(curr);     
+      }
+      
+      
+      pokedex.setText(s);
+   
+   }
+   
+   
+   private void showPokestack() {
+      String s = "";
+           
+      while (pokestack.size() > 0) {
+         Pokemon curr = pokestack.pop();
+         s += curr.toString() + "\n\n";
+         tempstack.add(curr);       
+      }
+      
+      while (temppq.size() > 0) {
+         Pokemon curr = tempstack.pop();
+         s += curr.toString() + "\n\n";  
+         pokestack.add(curr);     
+      }
+      
+      
+      pokedex.setText(s);
+   
    }
    /** 
    * Randomly generate a pokemon to appear. 
@@ -213,6 +265,9 @@ public class PokePanel extends JPanel {
          }
          if (event.getSource() == b3) {
             showPokedex();
+         }
+         if (event.getSource() == b4) {
+            showPokepq();
          }
       
       } 
