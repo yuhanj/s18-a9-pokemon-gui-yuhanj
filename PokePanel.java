@@ -33,22 +33,21 @@ public class PokePanel extends JPanel {
    private JButton b4 = new JButton(" Backpack ");   
    /** Random number generator. */
    private Random rGen = new Random();
-   /** binary search tree */
+   /** binary search tree. */
    private PokeTree poketree = new PokeTree();
    /** top panel.*/
    private JPanel top = new JPanel();
    /** bottom panel. */
    private JPanel bot = new JPanel();
-   
+   /** pokemon priority queue. */
    private PriorityQueue<Pokemon> pokepq = new PriorityQueue<>();
-   
+   /** temporary priority queue. */
    private PriorityQueue<Pokemon> temppq = new PriorityQueue<>();
-   
+   /** pokemon stack. */
    private Deque<Pokemon> pokestack = new ArrayDeque<>();
-   
+   /** temporary stack. */
    private Deque<Pokemon> tempstack = new ArrayDeque<>();
    
-   public JPopupMenu popup;
    
 
    /**
@@ -56,16 +55,16 @@ public class PokePanel extends JPanel {
    */
    public PokePanel() {
      
-      setPreferredSize(new Dimension(600, 800));
+      setPreferredSize(new Dimension(550, 600));
       addTopPanel();      
       addBottomPanel();
    
    }
    
-   
+   /** add top panel to main panel. */
    private void addTopPanel() {
       
-      top.setPreferredSize(new Dimension(500, 400));
+      top.setPreferredSize(new Dimension(500, 250));
       top.add(new JLabel(" Catch A Pokemon: "));
       top.add(wildPokemon);
       b1.addActionListener(new PokeListener());
@@ -79,10 +78,10 @@ public class PokePanel extends JPanel {
    
    
    
-   
+   /** add bottom panel to main panel. */
    private void addBottomPanel() {
       
-      bot.setPreferredSize(new Dimension(500, 400));
+      bot.setPreferredSize(new Dimension(500, 250));
       b3.addActionListener(new PokeListener());
       b4.addActionListener(new PokeListener());
       bot.add(b3);
@@ -90,15 +89,7 @@ public class PokePanel extends JPanel {
       bot.add(pokedex);
       add(bot);  
    }
-   
-   private void addPopUpMenu() {
       
-      popup.add(item = new JMenuItem("PQ"));
-      item.setHorizontalTextPosition(JMenuItem.RIGHT);
-      item.addActionListener(menuListener);
-   
-   }   
-   
    
    /**
    * show a wild pokemon in the textarea.
@@ -137,10 +128,12 @@ public class PokePanel extends JPanel {
       wildPokemon.setText(textarea);
       poketree.add(tp);
       pokepq.add(tp);
+      pokestack.push(tp);
    
    
    }
    
+   /** show pokedex.*/
    private void showPokedex() {
       
       
@@ -148,7 +141,7 @@ public class PokePanel extends JPanel {
       pokedex.setText(pokedexArea);
       
    }
-   
+   /** show pokepq.*/
    private void showPokepq() {
       String s = "";
            
@@ -159,8 +152,7 @@ public class PokePanel extends JPanel {
       }
       
       while (temppq.size() > 0) {
-         Pokemon curr = temppq.poll();
-         s += curr.toString() + "\n\n";  
+         Pokemon curr = temppq.poll();  
          pokepq.add(curr);     
       }
       
@@ -169,25 +161,48 @@ public class PokePanel extends JPanel {
    
    }
    
-   
+   /** show pokestack.*/
    private void showPokestack() {
       String s = "";
            
       while (pokestack.size() > 0) {
          Pokemon curr = pokestack.pop();
          s += curr.toString() + "\n\n";
-         tempstack.add(curr);       
+         tempstack.push(curr);       
       }
       
-      while (temppq.size() > 0) {
-         Pokemon curr = tempstack.pop();
-         s += curr.toString() + "\n\n";  
-         pokestack.add(curr);     
+      while (tempstack.size() > 0) {
+         Pokemon curr = tempstack.pop(); 
+         pokestack.push(curr);     
       }
       
       
       pokedex.setText(s);
    
+   }
+   
+   /** sorting popup menu. */
+   private void chooseSorting() {
+      String[] choices = { "Recent", "Number"};
+      String input = "";
+      try {
+         input = (String) JOptionPane.showInputDialog(null, " How to sort? ",
+               "The Choice of Sorting", JOptionPane.QUESTION_MESSAGE,
+               null, choices, choices[0]); 
+         switch(input) {
+            case "Recent": 
+               showPokestack();
+               break;
+            case "Number":
+               showPokepq();
+               break;
+            default:
+               throw new PokemonException("Invalid");
+            
+         }
+      } catch (Exception e) { }     
+   
+      
    }
    /** 
    * Randomly generate a pokemon to appear. 
@@ -263,7 +278,10 @@ public class PokePanel extends JPanel {
    /** GUIListenner. */
    public class PokeListener implements ActionListener {
       
-      /** GUIListenner. */
+      /** 
+      * GUIListenner. 
+      * @param event userinput.
+      */
       public void actionPerformed(ActionEvent event) {
          
          if (event.getSource() == b1) {
@@ -276,7 +294,7 @@ public class PokePanel extends JPanel {
             showPokedex();
          }
          if (event.getSource() == b4) {
-            showPokepq();
+            chooseSorting();
          }
       
       } 
