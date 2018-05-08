@@ -126,8 +126,7 @@ public class PokeTree {
          PokeNode largestNodeInLeftSubtree = this.
                getNodeWithLargestSearchKey(node.getLChild());
       // replace the node's item with this item
-         node.setPokemon(largestNodeInLeftSubtree.getPokemon());
-         node.setNumCaught(largestNodeInLeftSubtree.getNumCaught());
+         node.moveNode(largestNodeInLeftSubtree);
       // delete the rightmost node in the left subtree
          node.setLChild(this.removeNodeWithLargestSearchKey(node
              .getLChild()));

@@ -126,5 +126,15 @@ public class PokeNode {
       this.numCaught = i;
    }
    
+   /**
+   * made for removing method.
+   * @param n the new node to the spot during the removing
+   */   
+   public void moveNode(PokeNode n) {
    
+      this.setPokemon(n.getPokemon());
+      this.setNumCaught(n.getNumCaught());
+      this.key = n.getKey();
+      
+   }
 }
