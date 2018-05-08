@@ -14,7 +14,7 @@ public class PokePanel extends JPanel {
    /** the number of all available pokemon. */
    private static final int AVAILABLE_POKEMON = 13;
    /** show appeared pokemon info. */
-   private TextArea wildPokemon = new TextArea("");
+   private TextArea wildPokemon = new TextArea("", 10, 40, TextArea.SCROLLBARS_NONE);
    /** show appeared pokemon info. */
    private TextArea pokedex = new TextArea("");
    /** temp pokemon. */
@@ -23,20 +23,46 @@ public class PokePanel extends JPanel {
    private String textarea = "";
    /** text for pokedex part. */
    private String pokedexArea = "";
+   /** image of bag. */
+   private ImageIcon bagIcon = new ImageIcon("backpack.png");
+   /** image of pokedex. */
+   private ImageIcon dexIcon = new ImageIcon("smartphone.png");
+   private ImageIcon poke001 = new ImageIcon("001.png");
+   private ImageIcon poke002 = new ImageIcon("002.png");
+   private ImageIcon poke003 = new ImageIcon("003.png");
+   private ImageIcon poke004 = new ImageIcon("004.png");
+   private ImageIcon poke005 = new ImageIcon("005.png");
+   private ImageIcon poke006 = new ImageIcon("006.png");
+   private ImageIcon poke007 = new ImageIcon("007.png");
+   private ImageIcon poke008 = new ImageIcon("008.png");
+   private ImageIcon poke009 = new ImageIcon("009.png");
+   private ImageIcon poke133 = new ImageIcon("133.png");
+   private ImageIcon poke134 = new ImageIcon("134.png");
+   private ImageIcon poke135 = new ImageIcon("135.png");
+   private ImageIcon poke136 = new ImageIcon("136.png");
+
+   
+   private JLabel pokeImage = new JLabel(poke001);
    /** hunt botton. */
    private JButton b1 = new JButton(" Hunt ");
    /** catch botton. */
    private JButton b2 = new JButton(" Catch ");
    /** Pokedex botton. */
-   private JButton b3 = new JButton(" Pokedex ");
+   private JButton b3 = new JButton(dexIcon);
    /** BackPack botton. */
-   private JButton b4 = new JButton(" Backpack ");   
+   private JButton b4 = new JButton(bagIcon);   
    /** Random number generator. */
    private Random rGen = new Random();
    /** binary search tree. */
    private PokeTree poketree = new PokeTree();
    /** top panel.*/
    private JPanel top = new JPanel();
+   /** topleft panel.*/
+   private JPanel topleft = new JPanel();
+   /** topright panel.*/
+   private JPanel topright = new JPanel();
+   /** top panel.*/
+   private JPanel mid = new JPanel();
    /** bottom panel. */
    private JPanel bot = new JPanel();
    /** pokemon priority queue. */
@@ -48,6 +74,7 @@ public class PokePanel extends JPanel {
    /** temporary stack. */
    private Deque<Pokemon> tempstack = new ArrayDeque<>();
    
+
    
 
    /**
@@ -55,39 +82,54 @@ public class PokePanel extends JPanel {
    */
    public PokePanel() {
      
-      setPreferredSize(new Dimension(550, 600));
-      addTopPanel();      
+      setPreferredSize(new Dimension(800, 750));
+      addTopPanel(); 
+      addMidPanel();     
       addBottomPanel();
    
    }
    
    /** add top panel to main panel. */
    private void addTopPanel() {
-      
-      top.setPreferredSize(new Dimension(500, 250));
-      top.add(new JLabel(" Catch A Pokemon: "));
-      top.add(wildPokemon);
+      top.setPreferredSize(new Dimension(900, 230));
+      topleft.setPreferredSize(new Dimension(550, 230));
+      topright.setPreferredSize(new Dimension(230, 230));
+            
+      wildPokemon.setEditable(false);
+      topleft.add(wildPokemon);
       b1.addActionListener(new PokeListener());
       b2.addActionListener(new PokeListener());
       b2.setEnabled(false);
-      top.add(b1);
-      top.add(b2);
+      topleft.add(b1);
+      topleft.add(b2);
+      top.add(topleft);
+      topright.add(pokeImage);
+      top.add(topright);
+
       add(top);  
       
    }
    
    
    
-   /** add bottom panel to main panel. */
-   private void addBottomPanel() {
-      
-      bot.setPreferredSize(new Dimension(500, 250));
+   private void addMidPanel() {
+   
+      mid.setPreferredSize(new Dimension(600, 100));
       b3.addActionListener(new PokeListener());
       b4.addActionListener(new PokeListener());
-      bot.add(b3);
-      bot.add(b4);
+      mid.add(b3);
+      mid.add(b4);
+      add(mid);
+   }
+   /** add bottom panel to main panel. */
+   private void addBottomPanel() {
+            
+      bot.setPreferredSize(new Dimension(800, 300));      
+      pokedex.setPreferredSize(new Dimension(600, 300));
+      pokedex.setEditable(false);
       bot.add(pokedex);
       add(bot);  
+      
    }
       
    
@@ -96,6 +138,7 @@ public class PokePanel extends JPanel {
    * triggered by botton "Hunt"
    */
    public void hunt() {
+   
       wildPokemon.setText("");
       textarea = "";
       tp = choosePokemonToAppear();    
@@ -103,7 +146,54 @@ public class PokePanel extends JPanel {
       textarea += tp.toString() + "\n\n";
       wildPokemon.setText(textarea);
       b2.setEnabled(true);
+      
+      changeImage(tp);
+   }
    
+   public void changeImage(Pokemon p) {
+      try {
+         switch(p.getNumber()) {
+            case 1:
+               pokeImage.setIcon(poke001);
+               break;
+            case 2:
+               pokeImage.setIcon(poke002);
+               break;
+            case 3:
+               pokeImage.setIcon(poke003);
+               break;
+            case 4:
+               pokeImage.setIcon(poke004);
+               break; 
+            case 5:
+               pokeImage.setIcon(poke005);
+               break;
+            case 6:
+               pokeImage.setIcon(poke006);
+               break;
+            case 7:
+               pokeImage.setIcon(poke007);
+               break;
+            case 8:
+               pokeImage.setIcon(poke008);
+               break;   
+            case 9:
+               pokeImage.setIcon(poke009);
+               break;
+            case 133:
+               pokeImage.setIcon(poke133);
+               break;
+            case 134:
+               pokeImage.setIcon(poke134);
+               break;
+            case 135:
+               pokeImage.setIcon(poke135);
+               break;  
+            case 136:
+               pokeImage.setIcon(poke136);
+               break;                                      
+         }
+      } catch(Exception e) {}
    }
    
    /**
